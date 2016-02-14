@@ -59,7 +59,7 @@ app.post("/source6", function(req, res) {
     res.end("yes");
 });
 app.post("/positions", function(req, res) {
-    console.log(req.body);
+    // console.log(req.body);
     sourceData.positions = req.body;
     res.end("yes");
 });
