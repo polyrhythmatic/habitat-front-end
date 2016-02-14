@@ -6,7 +6,7 @@ var stage  = new PIXI.Container();
 var texture = new PIXI.Texture.fromImage("speaker.png");
 
 var compassDir = 0;
-var compassOffset = 25;
+var compassOffset = 20;
 
 var graphics = {};
 function setColor(){
