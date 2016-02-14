@@ -2,6 +2,7 @@
 var renderer = new PIXI.autoDetectRenderer(300, 300, { antialias: true });
 
 var stage  = new PIXI.Container();
+stage.pivot(new PIXI.Point(150, 150));
 var compassDir = 0;
 var compassOffset = 0;
 
