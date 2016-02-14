@@ -46,7 +46,7 @@ var ws = new WebSocket(host);
 var lastMessage;
 ws.onmessage = function(event) {
 	var message = JSON.parse(event.data);
-	console.log(message)
+	console.log(message.sources)
 	for (var key in message.sources) {
 		if(lastMessage && message.sources[key] != lastMessage.sources[key]){
 			document.getElementById(key).innerHTML = entryToHtml(message.sources[key]);
