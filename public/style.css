@@ -234,4 +234,12 @@ ul {
     height: auto !important;
 }
 
+.donate-wrapper {
+    text-align: center;
+}
+
+.donate-button, .donate-button:hover, .donate-button:visited {
+    color: black;
+}
+
 

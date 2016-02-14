@@ -300,4 +300,3 @@ function entryToHtml(inputJson) {
 // $(function() {
 // 	$("#source1").html(entryToHtml(testJson));
 // });
-// document.getElementById("source1").innerHTML = JSON.stringify(testJson);
