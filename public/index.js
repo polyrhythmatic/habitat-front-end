@@ -49,8 +49,7 @@ ws.onmessage = function(event) {
 	// console.log(message.sources)
 	for (var key in message.sources) {
 		if(lastMessage && message.sources[key] != lastMessage.sources[key]){
-			console.log(message.sources[key].content);
-			document.getElementById(key).innerHTML = entryToHtml(message.sources[key].content);
+			document.getElementById(key).innerHTML = entryToHtml(JSON.parse(message.sources[key].content));
 			// console.log("changing " + key);
 		}
 	}
@@ -202,6 +201,7 @@ if(window.DeviceOrientationEvent) {
 //   __v: 0 };
 
 function entryToHtml(inputJson) {
+	console.log(inputJson);
   var htmlString = '<ul class="entry-list">';
   if (inputJson.note) {
   	htmlString += '<li><span class="label">Note:</span>' + inputJson.note + '</li>';
