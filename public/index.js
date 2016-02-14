@@ -1,26 +1,60 @@
 //PIXI.js stuff
 var renderer = new PIXI.autoDetectRenderer(300, 300, { antialias: true });
+renderer.backgroundColor = 0xffffff;
 
 var stage  = new PIXI.Container();
-// stage.pivot(new PIXI.Point(150, 150));
+var texture = new PIXI.Texture.fromImage("speaker.png");
+
 var compassDir = 0;
 var compassOffset = 0;
 
 var graphics = {};
-for(var i = 1; i < 7; i ++){
-	graphics["source" + i] = new PIXI.Graphics();
-	graphics["source" + i].beginFill(0xFFFF0B, 0.5);
-	graphics["source" + i].drawCircle(0, 0, 20);
-	graphics["source" + i].endFill();
-	stage.addChild(graphics["source" + i]);
+function setColor(){
+	for(var i = 1; i < 7; i ++){
+		if(graphics["source" + i]) graphics["source" + i].clear();
+		graphics["source" + i] = new PIXI.Graphics();
+		graphics["source" + i].hitArea = new PIXI.Circle(0, 0, 20);
+		graphics["source" + i].interactive = true;
+		graphics["source" + i].lineStyle ( 1 , 0x000000,  1);
+		graphics["source" + i].beginFill(0x55728A, 0.5);
+		graphics["source" + i].drawCircle(0, 0, 20);
+		graphics["source" + i].endFill();
+		graphics["source" + i].sourceNumber = i - 1;
+		graphics["source" + i].tap = clickHandler;
+		stage.addChild(graphics["source" + i]);
+	}
 }
+
+function clickHandler(data) {
+	console.log(data.target.sourceNumber);
+	// debugger;
+	$(".your-class").slick('slickGoTo', data.target.sourceNumber);
+}
+
+setColor();
+
+$(document).ready(function(){
+	for(var i = 1; i < 7; i ++){
+		$('.your-class').on('afterChange', slickChange);
+	}
+});
+
+function slickChange(event, slick, direction){
+	console.log(direction);
+	setColor();
+	graphics["source" + (direction + 1)].lineStyle ( 2 , 0x000000,  1);
+	graphics["source" + (direction + 1)].beginFill(0xFF002B, 0.8);
+	graphics["source" + (direction + 1)].drawCircle(0, 0, 20);
+	graphics["source" + (direction + 1)].endFill();
+}
+//init 1st one with color
+slickChange(null,null, 0);
 
 function animate() {
 	for(var i = 1; i < 7; i ++) {
 		graphics["source" + i].position.x = scaledPositions["source" + i].x;
 		graphics["source" + i].position.y = scaledPositions["source" + i].y;
-		// console.log(graphics["source" + i].position.x);
-		stage.rotation = (compassDir + compassOffset)/180 * Math.PI;
+		stage.rotation = (-compassDir + compassOffset)/180 * Math.PI;
 	}
 	renderer.render(stage);
 	requestAnimationFrame(animate);
@@ -33,7 +67,8 @@ $(document).ready(function() {
 		speed: 300,
 		slidesToShow: 1,
 		adaptiveHeight: true,
-		appendDots: ".button-holder"
+		appendDots: ".button-holder",
+		swipeToSlide: true,
 	});
 	document.getElementById("main-canvas").appendChild(renderer.view);
 	sizeCanvas();
@@ -84,7 +119,7 @@ function copyPositions(positions){
 function scalePosition(input){
 	input = parseFloat(input);
 	// console.log("input is " + input);
-	var output = (input + 1) * windowWidth / 2;
+	var output = (input / 1.25) * (windowWidth / 2);
 	// console.log("output is " + output);
 	return output;
 }
@@ -99,6 +134,23 @@ function sizeCanvas(){
 	renderer.view.style.width = windowWidth + "px";
 	renderer.view.style.height = windowWidth + "px"; //this part adjusts the ratio:    
 	renderer.resize(windowWidth, windowWidth);
+	stage.position = new PIXI.Point(windowWidth/2, windowWidth/2);
+	orientSpeakers();
+}
+
+var speakers = [];
+var speakerAngles = [0, 45, 90, 135, 180, -135, -90, -45];
+function orientSpeakers(){
+	for(var i = 0; i < 8; i ++) {
+		speakers[i] = new PIXI.Sprite(texture);
+		speakers[i].scale = new PIXI.Point(0.01, 0.01);
+		speakers[i].anchor = new PIXI.Point(0.5, 0.5);
+		stage.addChild(speakers[i]);
+		speakers[i].rotation = (speakerAngles[i] + 180)/180 * Math.PI;
+		speakers[i].position.x = (windowWidth / 2) * 0.95 * Math.cos((speakerAngles[i]/180) * Math.PI);
+		speakers[i].position.y = (windowWidth / 2) * 0.95 * Math.sin((speakerAngles[i]/180) * Math.PI);
+	}
+
 }
 
 //device orientation stuff
@@ -201,7 +253,6 @@ if(window.DeviceOrientationEvent) {
 //   __v: 0 };
 
 function entryToHtml(inputJson) {
-	console.log(inputJson);
   var htmlString = '<ul class="entry-list">';
   if (inputJson.note) {
   	htmlString += '<li><span class="label">Note:</span>' + inputJson.note + '</li>';
@@ -294,6 +345,9 @@ function entryToHtml(inputJson) {
 		}
 		if (inputJson.recording.cut_length_s) {
 			htmlString += '<li><span class="label">Length:</span>' + inputJson.recording.cut_length_s +' seconds</li>';
+		}
+		if(inputJson._id) {
+			htmlString += '<li><span class="label">Link:</span><a href="http://macaulaylibrary.org/audio/'+ inputJson._id + '">' + inputJson._id + '</a></li>';
 		}
 		htmlString += '</ul></li>';
   }
