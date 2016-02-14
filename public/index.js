@@ -2,6 +2,8 @@
 var renderer = new PIXI.autoDetectRenderer(300, 300, { antialias: true });
 
 var stage  = new PIXI.Container();
+var compassDir = 0;
+var compassOffset = 0;
 
 var graphics = {};
 for(var i = 1; i < 7; i ++){
@@ -17,6 +19,7 @@ function animate() {
 		graphics["source" + i].position.x = scaledPositions["source" + i].x;
 		graphics["source" + i].position.y = scaledPositions["source" + i].y;
 		// console.log(graphics["source" + i].position.x);
+		stage.rotation = (compassDir + compassOffset)/180 * Math.PI;
 	}
 	renderer.render(stage);
 	requestAnimationFrame(animate);
@@ -97,7 +100,6 @@ function sizeCanvas(){
 }
 
 //device orientation stuff
-var compassDir;
 if(window.DeviceOrientationEvent) {
 	window.addEventListener("deviceorientation", function(event) {
 		if(event.webkitCompassHeading) {
