@@ -72,7 +72,6 @@ app.use(express.static('public'));
 var wss = new WebSocketServer({
     server: server
 });
-console.log("websocket server created");
 
 wss.on("connection", function(ws) {
     var id = setInterval(function() {
