@@ -82,9 +82,9 @@ function copyPositions(positions){
 }
 function scalePosition(input){
 	input = parseFloat(input);
-	console.log("input is " + input);
+	// console.log("input is " + input);
 	var output = (input + 1) * windowWidth / 2;
-	console.log("output is " + output);
+	// console.log("output is " + output);
 	return output;
 }
 
