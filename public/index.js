@@ -46,7 +46,7 @@ var ws = new WebSocket(host);
 var lastMessage;
 ws.onmessage = function(event) {
 	var message = JSON.parse(event.data);
-	console.log(message.sources)
+	// console.log(message.sources)
 	for (var key in message.sources) {
 		if(lastMessage && message.sources[key] != lastMessage.sources[key]){
 			document.getElementById(key).innerHTML = entryToHtml(message.sources[key]);
@@ -201,6 +201,7 @@ if(window.DeviceOrientationEvent) {
 //   __v: 0 };
 
 function entryToHtml(inputJson) {
+	console.log(inputJson);
   var htmlString = '<ul class="entry-list">';
   if (inputJson.note) {
   	htmlString += '<li><span class="label">Note:</span>' + inputJson.note + '</li>';
